@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>В календарь — генератор ICS</title>
+    <meta
+      name="description"
+      content="Создайте событие и скачайте файл ICS для Apple Calendar, Android, Google Calendar и Outlook."
+    >
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="В календарь — генератор ICS">
+    <meta
+      property="og:description"
+      content="Создайте событие и скачайте файл ICS для Apple Calendar, Android, Google Calendar и Outlook."
+    >
+    <meta property="og:locale" content="ru_RU">
+    <meta name="theme-color" content="#f6f5f2">
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="./styles.css">
+    <script src="./app.js" defer></script>
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="header">
+        <div>
+          <p class="eyebrow">Черновик сохраняется в этом браузере.</p>
+          <h1>В календарь</h1>
+          <p class="lead">Создайте событие и скачайте готовый файл <code>.ics</code>.</p>
+          <p class="muted">Все данные обрабатываются только в вашем браузере.</p>
+        </div>
+
+        <div class="theme-switcher" aria-label="Тема оформления">
+          <span class="theme-title">Тема</span>
+          <div class="segmented" role="group" aria-label="Выбор темы">
+            <button class="theme-button" type="button" data-theme-choice="system">Системная</button>
+            <button class="theme-button" type="button" data-theme-choice="light">Светлая</button>
+            <button class="theme-button" type="button" data-theme-choice="dark">Тёмная</button>
+          </div>
+        </div>
+      </header>
+
+      <main class="app-layout">
+        <form class="event-form" id="event-form" novalidate>
+          <section class="form-section" aria-labelledby="basic-title">
+            <h2 id="basic-title">Основные данные</h2>
+
+            <div class="field">
+              <label for="title">Название события</label>
+              <input id="title" name="title" type="text" autocomplete="off" placeholder="DevOops 2026">
+              <p class="field-error" id="title-error" aria-live="polite"></p>
+            </div>
+
+            <div class="field">
+              <label for="description">Описание</label>
+              <textarea
+                id="description"
+                name="description"
+                rows="5"
+                placeholder="Конференция для DevOps, SRE и platform-инженеров."
+              ></textarea>
+              <p class="field-error" id="description-error" aria-live="polite"></p>
+            </div>
+
+            <div class="two-columns">
+              <div class="field">
+                <label for="start-date">Дата начала</label>
+                <input id="start-date" name="startDate" type="date">
+                <p class="field-error" id="start-date-error" aria-live="polite"></p>
+              </div>
+
+              <div class="field time-field">
+                <label for="start-time">Время начала</label>
+                <input id="start-time" name="startTime" type="time">
+                <p class="field-error" id="start-time-error" aria-live="polite"></p>
+              </div>
+            </div>
+
+            <div class="two-columns">
+              <div class="field">
+                <label for="end-date">Дата окончания</label>
+                <input id="end-date" name="endDate" type="date">
+                <p class="field-error" id="end-date-error" aria-live="polite"></p>
+              </div>
+
+              <div class="field time-field">
+                <label for="end-time">Время окончания</label>
+                <input id="end-time" name="endTime" type="time">
+                <p class="field-error" id="end-time-error" aria-live="polite"></p>
+              </div>
+            </div>
+
+            <label class="check-row" for="all-day">
+              <input id="all-day" name="allDay" type="checkbox">
+              <span>Весь день</span>
+            </label>
+          </section>
+
+          <section class="form-section" aria-labelledby="extra-title">
+            <h2 id="extra-title">Дополнительно</h2>
+
+            <div class="two-columns">
+              <div class="field">
+                <label for="format">Формат мероприятия</label>
+                <select id="format" name="format">
+                  <option value="offline">Офлайн</option>
+                  <option value="online">Онлайн</option>
+                  <option value="hybrid">Гибрид</option>
+                </select>
+                <p class="field-error" id="format-error" aria-live="polite"></p>
+              </div>
+
+              <div class="field">
+                <label for="reminder">Напоминание</label>
+                <select id="reminder" name="reminder">
+                  <option value="none">Без напоминания</option>
+                  <option value="PT10M">За 10 минут</option>
+                  <option value="PT30M">За 30 минут</option>
+                  <option value="PT1H">За 1 час</option>
+                  <option value="P1D">За 1 день</option>
+                  <option value="P1W">За 1 неделю</option>
+                </select>
+                <p class="field-error" id="reminder-error" aria-live="polite"></p>
+              </div>
+            </div>
+
+            <div class="field" id="location-field">
+              <label for="location">Местоположение</label>
+              <input
+                id="location"
+                name="location"
+                type="text"
+                autocomplete="street-address"
+                placeholder="Санкт-Петербург, Экспофорум"
+              >
+              <p class="field-error" id="location-error" aria-live="polite"></p>
+            </div>
+
+            <div class="field">
+              <label for="event-url">Ссылка на мероприятие</label>
+              <input id="event-url" name="eventUrl" type="url" inputmode="url" placeholder="https://example.com">
+              <p class="field-error" id="event-url-error" aria-live="polite"></p>
+            </div>
+
+            <div class="field">
+              <label for="registration-url">Ссылка на регистрацию</label>
+              <input
+                id="registration-url"
+                name="registrationUrl"
+                type="url"
+                inputmode="url"
+                placeholder="https://example.com/register"
+              >
+              <p class="field-error" id="registration-url-error" aria-live="polite"></p>
+            </div>
+
+            <div class="field">
+              <label for="organizer">Организатор</label>
+              <input id="organizer" name="organizer" type="text" autocomplete="organization" placeholder="Название организатора">
+              <p class="field-error" id="organizer-error" aria-live="polite"></p>
+            </div>
+          </section>
+
+        </form>
+
+        <aside class="preview-panel" aria-labelledby="preview-title">
+          <div class="preview-heading">
+            <h2 id="preview-title">Предпросмотр</h2>
+            <span class="timezone" id="timezone-label"></span>
+          </div>
+          <div class="preview-card" id="preview" aria-live="polite">
+            <p class="empty-preview">Заполните данные события — здесь появится предпросмотр.</p>
+          </div>
+        </aside>
+
+        <div class="actions" aria-label="Основные действия">
+          <button class="button button-primary" type="submit" form="event-form">Скачать .ics</button>
+          <button class="button button-secondary" type="button" id="clear-button">Очистить</button>
+        </div>
+      </main>
+    </div>
+
+    <div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true"></div>
+  </body>
+</html>
