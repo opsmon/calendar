@@ -18,18 +18,101 @@
             <span class="brand-mark" aria-hidden="true">
               <span></span>
             </span>
-            <h1>Страница не найдена</h1>
+            <h1 data-i18n="title">Страница не найдена</h1>
           </div>
-          <p class="lead">Адрес мог измениться или быть введён с ошибкой.</p>
-          <p class="muted">Вернитесь к генератору события и скачайте готовый файл календаря.</p>
+          <p class="lead" data-i18n="lead">Адрес мог измениться или быть введён с ошибкой.</p>
+          <p class="muted" data-i18n="muted">Вернитесь к генератору события и скачайте готовый файл календаря.</p>
+        </div>
+
+        <div class="header-controls is-compact">
+          <div class="theme-switcher" data-i18n-aria-label="languageLabel" aria-label="Язык">
+            <span class="theme-title" data-i18n="language">Язык</span>
+            <div class="segmented is-two" role="group" data-i18n-aria-label="languageChoiceLabel" aria-label="Выбор языка">
+              <button class="theme-button" type="button" data-language-choice="ru">RU</button>
+              <button class="theme-button" type="button" data-language-choice="en">EN</button>
+            </div>
+          </div>
         </div>
       </header>
 
       <main class="event-form">
         <div class="actions">
-          <a class="button button-primary" href="./">На главную</a>
+          <a class="button button-primary" href="./" data-i18n="home">На главную</a>
         </div>
       </main>
     </div>
+
+    <script>
+      const messages = {
+        ru: {
+          description: "Страница не найдена. Вернитесь на главную страницу генератора ICS.",
+          home: "На главную",
+          language: "Язык",
+          languageChoiceLabel: "Выбор языка",
+          languageLabel: "Язык",
+          lead: "Адрес мог измениться или быть введён с ошибкой.",
+          muted: "Вернитесь к генератору события и скачайте готовый файл календаря.",
+          title: "Страница не найдена",
+          pageTitle: "Страница не найдена — В календарь",
+        },
+        en: {
+          description: "Page not found. Return to the ICS generator home page.",
+          home: "Home",
+          language: "Language",
+          languageChoiceLabel: "Language selection",
+          languageLabel: "Language",
+          lead: "The address may have changed or been typed incorrectly.",
+          muted: "Return to the event generator and download a ready calendar file.",
+          title: "Page not found",
+          pageTitle: "Page not found — Add to Calendar",
+        },
+      };
+
+      function applyLanguage(language) {
+        const selectedLanguage = messages[language] ? language : "ru";
+        const copy = messages[selectedLanguage];
+        document.documentElement.lang = selectedLanguage;
+        document.title = copy.pageTitle;
+        document.querySelector('meta[name="description"]').setAttribute("content", copy.description);
+        document.querySelectorAll("[data-i18n]").forEach((element) => {
+          element.textContent = copy[element.dataset.i18n];
+        });
+        document.querySelectorAll("[data-i18n-aria-label]").forEach((element) => {
+          element.setAttribute("aria-label", copy[element.dataset.i18nAriaLabel]);
+        });
+        document.querySelectorAll("[data-language-choice]").forEach((button) => {
+          const isActive = button.dataset.languageChoice === selectedLanguage;
+          button.classList.toggle("is-active", isActive);
+          button.setAttribute("aria-pressed", String(isActive));
+        });
+        localStorage.setItem("ics-generator-language", selectedLanguage);
+      }
+
+      function getInitialLanguage() {
+        const requestedLanguage = new URLSearchParams(window.location.search).get("lang");
+        return messages[requestedLanguage] ? requestedLanguage : localStorage.getItem("ics-generator-language") || "ru";
+      }
+
+      function updateLanguageUrl(language) {
+        const url = new URL(window.location.href);
+
+        if (language === "ru") {
+          url.searchParams.delete("lang");
+        } else {
+          url.searchParams.set("lang", language);
+        }
+
+        window.history.replaceState({}, "", url);
+      }
+
+      document.querySelectorAll("[data-language-choice]").forEach((button) => {
+        button.addEventListener("click", () => {
+          applyLanguage(button.dataset.languageChoice);
+          updateLanguageUrl(button.dataset.languageChoice);
+        });
+      });
+
+      applyLanguage(getInitialLanguage());
+    </script>
   </body>
 </html>

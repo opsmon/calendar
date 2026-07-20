@@ -24,23 +24,33 @@
     <div class="page-shell">
       <header class="header">
         <div>
-          <p class="eyebrow">Черновик хранится только в текущей сессии.</p>
+          <p class="eyebrow" data-i18n="eyebrow">Черновик хранится только в текущей сессии.</p>
           <div class="brand-row">
             <span class="brand-mark" aria-hidden="true">
               <span></span>
             </span>
-            <h1>В календарь</h1>
+            <h1 data-i18n="brand">В календарь</h1>
           </div>
-          <p class="lead">Создайте событие и скачайте готовый файл <code>.ics</code>.</p>
-          <p class="muted">Все данные обрабатываются только в вашем браузере.</p>
+          <p class="lead" data-i18n-html="lead">Создайте событие и скачайте готовый файл <code>.ics</code>.</p>
+          <p class="muted" data-i18n="privacy">Все данные обрабатываются только в вашем браузере.</p>
         </div>
 
-        <div class="theme-switcher" aria-label="Тема оформления">
-          <span class="theme-title">Тема</span>
-          <div class="segmented" role="group" aria-label="Выбор темы">
-            <button class="theme-button" type="button" data-theme-choice="system">Системная</button>
-            <button class="theme-button" type="button" data-theme-choice="light">Светлая</button>
-            <button class="theme-button" type="button" data-theme-choice="dark">Тёмная</button>
+        <div class="header-controls">
+          <div class="theme-switcher" data-i18n-aria-label="languageLabel" aria-label="Язык">
+            <span class="theme-title" data-i18n="language">Язык</span>
+            <div class="segmented is-two" role="group" data-i18n-aria-label="languageChoiceLabel" aria-label="Выбор языка">
+              <button class="theme-button" type="button" data-language-choice="ru">RU</button>
+              <button class="theme-button" type="button" data-language-choice="en">EN</button>
+            </div>
+          </div>
+
+          <div class="theme-switcher" data-i18n-aria-label="themeLabel" aria-label="Тема оформления">
+            <span class="theme-title" data-i18n="theme">Тема</span>
+            <div class="segmented" role="group" data-i18n-aria-label="themeChoiceLabel" aria-label="Выбор темы">
+              <button class="theme-button" type="button" data-theme-choice="system" data-i18n="themeSystem">Системная</button>
+              <button class="theme-button" type="button" data-theme-choice="light" data-i18n="themeLight">Светлая</button>
+              <button class="theme-button" type="button" data-theme-choice="dark" data-i18n="themeDark">Тёмная</button>
+            </div>
           </div>
         </div>
       </header>
@@ -48,20 +58,21 @@
       <main class="app-layout">
         <form class="event-form" id="event-form" novalidate>
           <section class="form-section" aria-labelledby="basic-title">
-            <h2 id="basic-title">Основные данные</h2>
+            <h2 id="basic-title" data-i18n="basicTitle">Основные данные</h2>
 
             <div class="field">
-              <label for="title">Название события</label>
-              <input id="title" name="title" type="text" autocomplete="off" placeholder="DevOops 2026">
+              <label for="title" data-i18n="titleLabel">Название события</label>
+              <input id="title" name="title" type="text" autocomplete="off" data-i18n-placeholder="titlePlaceholder" placeholder="DevOops 2026">
               <p class="field-error" id="title-error" aria-live="polite"></p>
             </div>
 
             <div class="field">
-              <label for="description">Описание</label>
+              <label for="description" data-i18n="descriptionLabel">Описание</label>
               <textarea
                 id="description"
                 name="description"
                 rows="5"
+                data-i18n-placeholder="descriptionPlaceholder"
                 placeholder="Конференция для DevOps, SRE и platform-инженеров."
               ></textarea>
               <p class="field-error" id="description-error" aria-live="polite"></p>
@@ -69,13 +80,13 @@
 
             <div class="two-columns">
               <div class="field">
-                <label for="start-date">Дата начала</label>
+                <label for="start-date" data-i18n="startDateLabel">Дата начала</label>
                 <input id="start-date" name="startDate" type="date">
                 <p class="field-error" id="start-date-error" aria-live="polite"></p>
               </div>
 
               <div class="field time-field">
-                <label for="start-time">Время начала</label>
+                <label for="start-time" data-i18n="startTimeLabel">Время начала</label>
                 <input id="start-time" name="startTime" type="time">
                 <p class="field-error" id="start-time-error" aria-live="polite"></p>
               </div>
@@ -83,13 +94,13 @@
 
             <div class="two-columns">
               <div class="field">
-                <label for="end-date">Дата окончания</label>
+                <label for="end-date" data-i18n="endDateLabel">Дата окончания</label>
                 <input id="end-date" name="endDate" type="date">
                 <p class="field-error" id="end-date-error" aria-live="polite"></p>
               </div>
 
               <div class="field time-field">
-                <label for="end-time">Время окончания</label>
+                <label for="end-time" data-i18n="endTimeLabel">Время окончания</label>
                 <input id="end-time" name="endTime" type="time">
                 <p class="field-error" id="end-time-error" aria-live="polite"></p>
               </div>
@@ -97,58 +108,59 @@
 
             <label class="check-row" for="all-day">
               <input id="all-day" name="allDay" type="checkbox">
-              <span>Весь день</span>
+              <span data-i18n="allDayLabel">Весь день</span>
             </label>
           </section>
 
           <section class="form-section" aria-labelledby="extra-title">
-            <h2 id="extra-title">Дополнительно</h2>
+            <h2 id="extra-title" data-i18n="extraTitle">Дополнительно</h2>
 
             <div class="two-columns">
               <div class="field">
-                <label for="format">Формат мероприятия</label>
+                <label for="format" data-i18n="formatLabel">Формат мероприятия</label>
                 <select id="format" name="format">
-                  <option value="offline">Офлайн</option>
-                  <option value="online">Онлайн</option>
-                  <option value="hybrid">Гибрид</option>
+                  <option value="offline" data-i18n="formatOffline">Офлайн</option>
+                  <option value="online" data-i18n="formatOnline">Онлайн</option>
+                  <option value="hybrid" data-i18n="formatHybrid">Гибрид</option>
                 </select>
                 <p class="field-error" id="format-error" aria-live="polite"></p>
               </div>
 
               <div class="field">
-                <label for="reminder">Напоминание</label>
+                <label for="reminder" data-i18n="reminderLabel">Напоминание</label>
                 <select id="reminder" name="reminder">
-                  <option value="none">Без напоминания</option>
-                  <option value="PT10M">За 10 минут</option>
-                  <option value="PT30M">За 30 минут</option>
-                  <option value="PT1H">За 1 час</option>
-                  <option value="P1D">За 1 день</option>
-                  <option value="P1W">За 1 неделю</option>
+                  <option value="none" data-i18n="reminderNone">Без напоминания</option>
+                  <option value="PT10M" data-i18n="reminder10m">За 10 минут</option>
+                  <option value="PT30M" data-i18n="reminder30m">За 30 минут</option>
+                  <option value="PT1H" data-i18n="reminder1h">За 1 час</option>
+                  <option value="P1D" data-i18n="reminder1d">За 1 день</option>
+                  <option value="P1W" data-i18n="reminder1w">За 1 неделю</option>
                 </select>
                 <p class="field-error" id="reminder-error" aria-live="polite"></p>
               </div>
             </div>
 
             <div class="field" id="location-field">
-              <label for="location">Местоположение</label>
+              <label for="location" data-i18n="locationLabel">Местоположение</label>
               <input
                 id="location"
                 name="location"
                 type="text"
                 autocomplete="street-address"
+                data-i18n-placeholder="locationPlaceholder"
                 placeholder="Санкт-Петербург, Экспофорум"
               >
               <p class="field-error" id="location-error" aria-live="polite"></p>
             </div>
 
             <div class="field">
-              <label for="event-url">Ссылка на мероприятие</label>
+              <label for="event-url" data-i18n="eventUrlLabel">Ссылка на мероприятие</label>
               <input id="event-url" name="eventUrl" type="url" inputmode="url" placeholder="https://example.com">
               <p class="field-error" id="event-url-error" aria-live="polite"></p>
             </div>
 
             <div class="field">
-              <label for="registration-url">Ссылка на регистрацию</label>
+              <label for="registration-url" data-i18n="registrationUrlLabel">Ссылка на регистрацию</label>
               <input
                 id="registration-url"
                 name="registrationUrl"
@@ -160,8 +172,8 @@
             </div>
 
             <div class="field">
-              <label for="organizer">Организатор</label>
-              <input id="organizer" name="organizer" type="text" autocomplete="organization" placeholder="Название организатора">
+              <label for="organizer" data-i18n="organizerLabel">Организатор</label>
+              <input id="organizer" name="organizer" type="text" autocomplete="organization" data-i18n-placeholder="organizerPlaceholder" placeholder="Название организатора">
               <p class="field-error" id="organizer-error" aria-live="polite"></p>
             </div>
           </section>
@@ -170,17 +182,17 @@
 
         <aside class="preview-panel" aria-labelledby="preview-title">
           <div class="preview-heading">
-            <h2 id="preview-title">Предпросмотр</h2>
+            <h2 id="preview-title" data-i18n="previewTitle">Предпросмотр</h2>
             <span class="timezone" id="timezone-label"></span>
           </div>
           <div class="preview-card" id="preview" aria-live="polite">
-            <p class="empty-preview">Заполните данные события — здесь появится предпросмотр.</p>
+            <p class="empty-preview" data-i18n="emptyPreview">Заполните данные события — здесь появится предпросмотр.</p>
           </div>
         </aside>
 
-        <div class="actions" aria-label="Основные действия">
-          <button class="button button-primary" type="submit" form="event-form">Скачать .ics</button>
-          <button class="button button-secondary" type="button" id="clear-button">Очистить</button>
+        <div class="actions" data-i18n-aria-label="actionsLabel" aria-label="Основные действия">
+          <button class="button button-primary" type="submit" form="event-form" data-i18n="downloadButton">Скачать .ics</button>
+          <button class="button button-secondary" type="button" id="clear-button" data-i18n="clearButton">Очистить</button>
         </div>
       </main>
     </div>
