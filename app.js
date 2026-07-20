@@ -192,15 +192,35 @@ function renderPreview(data) {
 
   const mapLinks = data.location ? renderMapLinks(data.location) : "";
   const title = data.title || "Без названия";
+  const dateBadge = data.startDate ? renderDateBadge(data.startDate) : "";
 
   preview.innerHTML = `
-    <div>
-      <h3 class="preview-title">${escapeHTML(title)}</h3>
+    <div class="preview-top">
+      ${dateBadge}
+      <div>
+        <p class="preview-kicker">${escapeHTML(formatLabels[data.format] || data.format)}</p>
+        <h3 class="preview-title">${escapeHTML(title)}</h3>
+      </div>
     </div>
     <dl class="preview-list">
       ${items.join("")}
     </dl>
     ${mapLinks}
+  `;
+}
+
+function renderDateBadge(dateString) {
+  const [year, month, day] = dateString.split("-").map(Number);
+  const date = new Date(year, month - 1, day);
+  const monthLabel = new Intl.DateTimeFormat("ru-RU", { month: "short" })
+    .format(date)
+    .replace(".", "");
+
+  return `
+    <div class="date-badge" aria-hidden="true">
+      <span class="date-badge-month">${escapeHTML(monthLabel)}</span>
+      <span class="date-badge-day">${pad(day)}</span>
+    </div>
   `;
 }
 
@@ -341,11 +361,11 @@ function downloadICS(data) {
 }
 
 function saveDraft() {
-  localStorage.setItem(DRAFT_KEY, JSON.stringify(getFormData()));
+  sessionStorage.setItem(DRAFT_KEY, JSON.stringify(getFormData()));
 }
 
 function loadDraft() {
-  const rawDraft = localStorage.getItem(DRAFT_KEY);
+  const rawDraft = sessionStorage.getItem(DRAFT_KEY);
 
   if (!rawDraft) {
     return;
@@ -367,13 +387,13 @@ function loadDraft() {
       }
     });
   } catch {
-    localStorage.removeItem(DRAFT_KEY);
+    sessionStorage.removeItem(DRAFT_KEY);
   }
 }
 
 function clearForm() {
   form.reset();
-  localStorage.removeItem(DRAFT_KEY);
+  sessionStorage.removeItem(DRAFT_KEY);
   renderErrors({});
   updateConditionalFields();
   renderPreview(getFormData());
@@ -689,6 +709,7 @@ function init() {
   timezoneLabel.textContent = timezone;
 
   applyTheme(localStorage.getItem(THEME_KEY) || "system");
+  localStorage.removeItem(DRAFT_KEY);
   loadDraft();
   updateConditionalFields();
   renderPreview(getFormData());
