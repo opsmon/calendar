@@ -3,6 +3,7 @@
   import {
     DRAFT_KEY,
     LANGUAGE_KEY,
+    THEME_KEY,
     translations,
   } from "./lib/i18n.svelte";
   import {
@@ -19,12 +20,18 @@
   } from "./lib/calendar.js";
 
   const languages = ["ru", "en"];
+  const themes = ["light", "dark"];
+  const themeColors = {
+    light: "#faf7ff",
+    dark: "#151026",
+  };
   const formats = ["offline", "online", "hybrid"];
   const reminders = ["none", "PT10M", "PT30M", "PT1H", "P1D", "P1W"];
 
   let data = { ...emptyEvent };
   let errors = {};
   let currentLanguage = "ru";
+  let selectedTheme = "light";
   let timezone = "";
   let toastMessage = "";
   let isToastVisible = false;
@@ -40,6 +47,7 @@
 
   onMount(() => {
     setLanguage(getInitialLanguage(), false);
+    setTheme(getInitialTheme());
     loadDraft();
     updateTimezoneLabel();
   });
@@ -169,6 +177,13 @@
     }, 2600);
   }
 
+  function setTheme(theme) {
+    selectedTheme = themes.includes(theme) ? theme : "light";
+    localStorage.setItem(THEME_KEY, selectedTheme);
+    document.documentElement.dataset.theme = selectedTheme;
+    updateMetaContent('meta[name="theme-color"]', themeColors[selectedTheme]);
+  }
+
   function setLanguage(language, shouldUpdateUrl = true) {
     currentLanguage = translations[language] ? language : "ru";
     localStorage.setItem(LANGUAGE_KEY, currentLanguage);
@@ -190,6 +205,22 @@
     }
 
     return localStorage.getItem(LANGUAGE_KEY) || "ru";
+  }
+
+  function getInitialTheme() {
+    const requestedTheme = new URLSearchParams(window.location.search).get("theme");
+
+    if (themes.includes(requestedTheme)) {
+      return requestedTheme;
+    }
+
+    const savedTheme = localStorage.getItem(THEME_KEY);
+
+    if (themes.includes(savedTheme)) {
+      return savedTheme;
+    }
+
+    return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
   }
 
   function updateLanguageUrl(language) {
@@ -254,6 +285,23 @@
               on:click={() => setLanguage(language)}
             >
               {language.toUpperCase()}
+            </button>
+          {/each}
+        </div>
+      </div>
+
+      <div class="control-switcher" aria-label={t.ui.themeLabel}>
+        <span class="control-title">{t.ui.theme}</span>
+        <div class="segmented is-two" role="group" aria-label={t.ui.themeChoiceLabel}>
+          {#each themes as theme}
+            <button
+              class:is-active={selectedTheme === theme}
+              aria-pressed={selectedTheme === theme}
+              class="segmented-button"
+              type="button"
+              on:click={() => setTheme(theme)}
+            >
+              {t.ui[`theme${theme[0].toUpperCase()}${theme.slice(1)}`]}
             </button>
           {/each}
         </div>

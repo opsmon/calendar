@@ -1,5 +1,6 @@
 <script module>
 export const LANGUAGE_KEY = "ics-generator-language";
+export const THEME_KEY = "ics-generator-theme";
 export const DRAFT_KEY = "ics-generator-draft";
 
 export const translations = {
@@ -47,6 +48,11 @@ export const translations = {
       reminderNone: "Без напоминания",
       startDateLabel: "Дата начала",
       startTimeLabel: "Время начала",
+      theme: "Тема",
+      themeChoiceLabel: "Выбор темы",
+      themeDark: "Тёмная",
+      themeLabel: "Тема оформления",
+      themeLight: "Светлая",
       titleLabel: "Название события",
       titlePlaceholder: "DevOops 2026",
     },
@@ -149,6 +155,11 @@ export const translations = {
       reminderNone: "No reminder",
       startDateLabel: "Start date",
       startTimeLabel: "Start time",
+      theme: "Theme",
+      themeChoiceLabel: "Theme selection",
+      themeDark: "Dark",
+      themeLabel: "Theme",
+      themeLight: "Light",
       titleLabel: "Event title",
       titlePlaceholder: "DevOops 2026",
     },

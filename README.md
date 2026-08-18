@@ -10,7 +10,7 @@ A simple Svelte app for creating `.ics` calendar files in the browser.
 - Live event preview.
 - Regular and all-day events.
 - RU/EN interface.
-- Light, dark, and system themes.
+- Purple light and dark themes.
 
 ## Run Locally
 
