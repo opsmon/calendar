@@ -5,7 +5,7 @@
     LANGUAGE_KEY,
     THEME_KEY,
     translations,
-  } from "./lib/i18n.js";
+  } from "./lib/i18n.svelte";
   import {
     buildMapLinks,
     downloadICS,
@@ -20,14 +20,18 @@
   } from "./lib/calendar.js";
 
   const languages = ["ru", "en"];
-  const themes = ["system", "light", "dark"];
+  const themes = ["light", "dark"];
+  const themeColors = {
+    light: "#faf7ff",
+    dark: "#151026",
+  };
   const formats = ["offline", "online", "hybrid"];
   const reminders = ["none", "PT10M", "PT30M", "PT1H", "P1D", "P1W"];
 
   let data = { ...emptyEvent };
   let errors = {};
   let currentLanguage = "ru";
-  let selectedTheme = "system";
+  let selectedTheme = "light";
   let timezone = "";
   let toastMessage = "";
   let isToastVisible = false;
@@ -43,7 +47,7 @@
 
   onMount(() => {
     setLanguage(getInitialLanguage(), false);
-    setTheme(localStorage.getItem(THEME_KEY) || "system");
+    setTheme(getInitialTheme());
     loadDraft();
     updateTimezoneLabel();
   });
@@ -174,14 +178,10 @@
   }
 
   function setTheme(theme) {
-    selectedTheme = themes.includes(theme) ? theme : "system";
+    selectedTheme = themes.includes(theme) ? theme : "light";
     localStorage.setItem(THEME_KEY, selectedTheme);
-
-    if (selectedTheme === "system") {
-      document.documentElement.removeAttribute("data-theme");
-    } else {
-      document.documentElement.setAttribute("data-theme", selectedTheme);
-    }
+    document.documentElement.dataset.theme = selectedTheme;
+    updateMetaContent('meta[name="theme-color"]', themeColors[selectedTheme]);
   }
 
   function setLanguage(language, shouldUpdateUrl = true) {
@@ -205,6 +205,22 @@
     }
 
     return localStorage.getItem(LANGUAGE_KEY) || "ru";
+  }
+
+  function getInitialTheme() {
+    const requestedTheme = new URLSearchParams(window.location.search).get("theme");
+
+    if (themes.includes(requestedTheme)) {
+      return requestedTheme;
+    }
+
+    const savedTheme = localStorage.getItem(THEME_KEY);
+
+    if (themes.includes(savedTheme)) {
+      return savedTheme;
+    }
+
+    return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
   }
 
   function updateLanguageUrl(language) {
@@ -257,14 +273,14 @@
     </div>
 
     <div class="header-controls">
-      <div class="theme-switcher" aria-label={t.ui.languageLabel}>
-        <span class="theme-title">{t.ui.language}</span>
+      <div class="control-switcher" aria-label={t.ui.languageLabel}>
+        <span class="control-title">{t.ui.language}</span>
         <div class="segmented is-two" role="group" aria-label={t.ui.languageChoiceLabel}>
           {#each languages as language}
             <button
               class:is-active={currentLanguage === language}
               aria-pressed={currentLanguage === language}
-              class="theme-button"
+              class="segmented-button"
               type="button"
               on:click={() => setLanguage(language)}
             >
@@ -274,14 +290,14 @@
         </div>
       </div>
 
-      <div class="theme-switcher" aria-label={t.ui.themeLabel}>
-        <span class="theme-title">{t.ui.theme}</span>
-        <div class="segmented" role="group" aria-label={t.ui.themeChoiceLabel}>
+      <div class="control-switcher" aria-label={t.ui.themeLabel}>
+        <span class="control-title">{t.ui.theme}</span>
+        <div class="segmented is-two" role="group" aria-label={t.ui.themeChoiceLabel}>
           {#each themes as theme}
             <button
               class:is-active={selectedTheme === theme}
               aria-pressed={selectedTheme === theme}
-              class="theme-button"
+              class="segmented-button"
               type="button"
               on:click={() => setTheme(theme)}
             >
